@@ -1,9 +1,9 @@
 #include <Arduino.h>
 #include <driver/ledc.h>
 
-int motor1Pin1 = 27; 
+int motor1Pin1 = 27; // control direction
 int motor1Pin2 = 26; 
-int enable1Pin = 14;
+int enable1Pin = 14; //control motor speeds
 
 int motor1Pin3 = 25; 
 int motor1Pin4 = 33; 
