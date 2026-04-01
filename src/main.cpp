@@ -14,6 +14,32 @@ const int pwmChannel = 0;
 const int resolution = 8;
 int dutyCycle = 170;
 
+const int moveForwardPin = 18;
+const int moveBackwardsPin = 19;
+int forwardState = 0;
+int backwardState = 0;
+
+void stopMotors(){
+  digitalWrite(motor1Pin1, LOW);
+  digitalWrite(motor1Pin2, LOW);
+  digitalWrite(motor1Pin3, LOW);
+  digitalWrite(motor1Pin4, LOW);
+}
+
+void moveForward(){
+  digitalWrite(motor1Pin1, LOW);
+  digitalWrite(motor1Pin2, HIGH);
+  digitalWrite(motor1Pin3, HIGH);
+  digitalWrite(motor1Pin4, LOW);
+}
+
+void moveBackward(){
+  digitalWrite(motor1Pin1, HIGH);
+  digitalWrite(motor1Pin2, LOW);
+  digitalWrite(motor1Pin3, LOW);
+  digitalWrite(motor1Pin4, HIGH);
+}
+
 void setup() {
   pinMode(motor1Pin1, OUTPUT);
   pinMode(motor1Pin2, OUTPUT);
@@ -27,22 +53,29 @@ void setup() {
   ledcAttachPin(enable1Pin, pwmChannel);
   ledcAttachPin(enable2Pin, pwmChannel);
   ledcWrite(pwmChannel, dutyCycle);
+
+  pinMode(moveBackwardsPin, INPUT);
+  pinMode(moveForwardPin, INPUT);
+
+  stopMotors();
 }
 
 void loop() {
+  
   // put your main code here, to run repeatedly:
-  // Move DC motor forward
-  digitalWrite(motor1Pin1, HIGH);
-  digitalWrite(motor1Pin2, LOW);
-  digitalWrite(motor1Pin3, LOW);
-  digitalWrite(motor1Pin4, HIGH);
-  delay(1000);
+  forwardState = digitalRead(moveForwardPin);
+  backwardState = digitalRead(moveBackwardsPin);
+  if (forwardState == LOW && backwardState == HIGH){
+    moveForward();
+  } else if (backwardState == LOW && forwardState == HIGH){
+    moveBackward();
+  }
+  else {
+    stopMotors();
+  }
+  
 
-  // Move DC motor backward
-  // digitalWrite(motor1Pin1, LOW);
-  // digitalWrite(motor1Pin2, HIGH);
-  // digitalWrite(motor1Pin3, LOW);
-  // digitalWrite(motor1Pin4, HIGH);
+  
 
   // delay(1000);
 
