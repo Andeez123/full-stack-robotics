@@ -1,34 +1,53 @@
 #include <Arduino.h>
+#include <driver/ledc.h>
 
-const int motor1Pin1 = 27;  // IN1
-const int motor1Pin2 = 26;  // IN2
-const int enable1Pin = 14;  // ENA (PWM)
+int motor1Pin1 = 27; 
+int motor1Pin2 = 26; 
+int enable1Pin = 14;
 
-const int pwmChannel = 0;
-const int pwmFreq = 1000;
-const int pwmResolution = 8;
+int motor1Pin3 = 25; 
+int motor1Pin4 = 33; 
+int enable2Pin = 32;
+
+const int freq = 10000;
+const int pwmChannelA = 0;
+const int pwmChannelB = 1;
+const int resolution = 8;
 
 void setup() {
-  Serial.begin(9600);
-  Serial.println("Motor test starting...");
-
   pinMode(motor1Pin1, OUTPUT);
   pinMode(motor1Pin2, OUTPUT);
+  pinMode(motor1Pin3, OUTPUT);
+  pinMode(motor1Pin4, OUTPUT);
 
-  // Configure PWM
-  ledcSetup(pwmChannel, pwmFreq, pwmResolution);
-  ledcAttachPin(enable1Pin, pwmChannel);
+  ledcSetup(pwmChannelA, freq, resolution);
+  ledcSetup(pwmChannelB, freq, resolution);
+  ledcAttachPin(enable1Pin, pwmChannelA);
+  ledcAttachPin(enable2Pin, pwmChannelB);
 
-  // Full speed (0-255 for 8-bit resolution)
-  ledcWrite(pwmChannel, 255);
-
-  // Set motor direction
-  digitalWrite(motor1Pin1, LOW);
-  digitalWrite(motor1Pin2, HIGH);
-
-  Serial.println("Motor should be spinning.");
+  ledcWrite(pwmChannelA, 100);
+  ledcWrite(pwmChannelB, 55);
 }
 
 void loop() {
-  // Nothing to do
+  // put your main code here, to run repeatedly:
+  // Move DC motor forward
+  digitalWrite(motor1Pin3, HIGH);
+  digitalWrite(motor1Pin4, LOW);
+  delay(2000);
+
+  digitalWrite(motor1Pin1, LOW);
+  digitalWrite(motor1Pin2, HIGH);
+  delay(1000);
+
+  // //move forward with increasing speed
+  // digitalWrite(motor1Pin1, LOW);
+  // digitalWrite(motor1Pin2, HIGH);
+  // for (dutyCycle = 170; dutyCycle < 255; dutyCycle++) {
+  //   ledcWrite(pwmChannel, dutyCycle);
+  //   delay(20);
+  // }
+
+  // dutyCycle = 170;
+  // ledcWrite(pwmChannel, dutyCycle);
 }
